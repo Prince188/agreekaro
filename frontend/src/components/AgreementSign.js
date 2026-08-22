@@ -93,79 +93,101 @@ function AgreementSign() {
     </div>
   );
 
+  const steps = ['Review', 'Verify', 'Accept', 'Signed'];
+  const stepIndex = step === 'details' ? 0 : step === 'confirm' ? 2 : 3;
+
   return (
     <div className="sign-page">
       <div className="sign-card">
+        <div className="sign-steps">
+          {steps.map((label, i) => (
+            <React.Fragment key={label}>
+              {i > 0 && <span className={`step-line ${i <= stepIndex ? 'done' : ''}`}></span>}
+              <span className={`sign-step ${i < stepIndex ? 'done' : i === stepIndex ? 'active' : ''}`}>
+                <span className="step-dot">{i < stepIndex ? '✓' : i + 1}</span>
+                <span className="step-label">{label}</span>
+              </span>
+            </React.Fragment>
+          ))}
+        </div>
+
         <div className="sign-header">
           <h1>{agreement.title}</h1>
           <p>Review and sign the agreement</p>
         </div>
 
+        <div className="sign-price-banner">
+          <span className="price-label">Total Project Value</span>
+          <span className="price-value">{`₹${Number(agreement.price).toLocaleString('en-IN')}`}</span>
+        </div>
+
         <div className="sign-details">
-          <div className="detail-row">
-            <span className="detail-label">Client Name</span>
-            <span className="detail-value">{agreement.clientName}</span>
-          </div>
-          <div className="detail-row">
-            <span className="detail-label">Project Title</span>
-            <span className="detail-value">{agreement.title}</span>
-          </div>
-          {agreement.description && (
+          <div className="sign-section">
+            <h4>Project Scope</h4>
             <div className="detail-row">
-              <span className="detail-label">Description</span>
-              <span className="detail-value" style={{ maxWidth: '60%', textAlign: 'right' }}>{agreement.description}</span>
+              <span className="detail-label">Client Name</span>
+              <span className="detail-value">{agreement.clientName}</span>
             </div>
-          )}
-          <div className="detail-row">
-            <span className="detail-label">Deliverables</span>
-            <span className="detail-value" style={{ maxWidth: '60%', textAlign: 'right' }}>{agreement.deliverables}</span>
-          </div>
-          {agreement.timeline && (
             <div className="detail-row">
-              <span className="detail-label">Deadline</span>
-              <span className="detail-value">{formatTimeline(agreement.timeline)}</span>
+              <span className="detail-label">Deliverables</span>
+              <span className="detail-value pre-wrap">{agreement.deliverables}</span>
             </div>
-          )}
-          {agreement.revisions && (
-            <div className="detail-row">
-              <span className="detail-label">Revisions</span>
-              <span className="detail-value">{agreement.revisions}</span>
-            </div>
-          )}
-          <div className="detail-row">
-            <span className="detail-label">Payment Amount</span>
-            <span className="detail-value">₹{agreement.price}</span>
+            {agreement.description && (
+              <div className="detail-row">
+                <span className="detail-label">Description</span>
+                <span className="detail-value pre-wrap">{agreement.description}</span>
+              </div>
+            )}
+            {agreement.timeline && (
+              <div className="detail-row">
+                <span className="detail-label">Deadline</span>
+                <span className="detail-value">{formatTimeline(agreement.timeline)}</span>
+              </div>
+            )}
+            {agreement.revisions && (
+              <div className="detail-row">
+                <span className="detail-label">Revisions</span>
+                <span className="detail-value">{agreement.revisions}</span>
+              </div>
+            )}
           </div>
+
           {(agreement.advanceAmount || agreement.beforeDeliveryAmount || agreement.afterDeliveryAmount) && (
-            <div className="detail-row">
-              <span className="detail-label">Payment Schedule</span>
-              <span className="detail-value" style={{ maxWidth: '60%', textAlign: 'right' }}>
-                Advance: ₹{agreement.advanceAmount ?? '—'}{' · '}
-                Before Delivery: ₹{agreement.beforeDeliveryAmount ?? '—'}{' · '}
-                After Delivery: ₹{agreement.afterDeliveryAmount ?? '—'}
-              </span>
+            <div className="sign-section">
+              <h4>Payment Schedule</h4>
+              <div className="schedule-grid">
+                <div className="schedule-item">
+                  <span className="schedule-label">Advance</span>
+                  <span className="schedule-value">{agreement.advanceAmount ? `₹${agreement.advanceAmount}` : '—'}</span>
+                </div>
+                <div className="schedule-item">
+                  <span className="schedule-label">Before Delivery</span>
+                  <span className="schedule-value">{agreement.beforeDeliveryAmount ? `₹${agreement.beforeDeliveryAmount}` : '—'}</span>
+                </div>
+                <div className="schedule-item">
+                  <span className="schedule-label">After Delivery</span>
+                  <span className="schedule-value">{agreement.afterDeliveryAmount ? `₹${agreement.afterDeliveryAmount}` : '—'}</span>
+                </div>
+              </div>
             </div>
           )}
+
           {agreement.additionalTerms && (
-            <div className="detail-row">
-              <span className="detail-label">Additional Terms</span>
-              <span className="detail-value" style={{ maxWidth: '60%', textAlign: 'right' }}>{agreement.additionalTerms}</span>
+            <div className="sign-section">
+              <h4>Additional Terms</h4>
+              <p className="terms-text">{agreement.additionalTerms}</p>
             </div>
           )}
-          <div className="detail-row">
-            <span className="detail-label">Status</span>
-            <span className={`status-badge ${agreement.status}`}>{agreement.status}</span>
-          </div>
         </div>
 
         {step === 'details' && (
           <div className="sign-form">
-            <div style={{ textAlign: 'center', marginBottom: '0.75rem' }}>
+            <div className="pdf-view-row">
               <button className="btn btn-secondary btn-sm" onClick={() => window.open(`${API_URL}/api/agreements/public/${token}/pdf`, '_blank')}>
                 View Agreement PDF
               </button>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.75rem' }}>Your Information</h3>
+            <h3 className="sign-form-title">Your Information</h3>
             <div className="form-group">
               <label className="form-label">Full Name</label>
               <input type="text" className="form-input" placeholder="Your full legal name" value={form.freelancerName} onChange={e => setForm({ ...form, freelancerName: e.target.value })} required />
@@ -183,21 +205,21 @@ function AgreementSign() {
               <input type="text" className="form-input" placeholder="Your full address" value={form.freelancerAddress} onChange={e => setForm({ ...form, freelancerAddress: e.target.value })} />
             </div>
             {otpError && <div className="auth-error">{otpError}</div>}
-            <button className="btn btn-primary" style={{ width: '100%', marginTop: '0.25rem' }} onClick={handleSendOTP} disabled={otpLoading || !form.freelancerName}>
+            <button className="btn btn-primary btn-block" onClick={handleSendOTP} disabled={otpLoading || !form.freelancerName}>
               {otpLoading ? 'Sending OTP...' : 'Send Verification OTP'}
             </button>
           </div>
         )}
 
         {step === 'confirm' && (
-          <div className="sign-form" style={{ textAlign: 'center' }}>
-            <div className="success-icon" style={{ margin: '0 auto 0.75rem' }}>&#x1F512;</div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 600, marginBottom: '0.3rem' }}>Phone Verified</h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', marginBottom: '1rem' }}>
-              By clicking "Accept Agreement", you confirm your identity and agree to the terms above.
+          <div className="sign-form confirm-box">
+            <div className="success-icon">&#x1F512;</div>
+            <h3 className="sign-form-title center">Phone Verified</h3>
+            <p className="confirm-text">
+              By clicking "Accept Agreement", you confirm your identity and agree to all the terms above.
             </p>
             {otpError && <div className="auth-error">{otpError}</div>}
-            <button className="btn btn-success" style={{ width: '100%' }} onClick={handleAccept} disabled={acceptLoading}>
+            <button className="btn btn-success btn-block" onClick={handleAccept} disabled={acceptLoading}>
               {acceptLoading ? 'Processing...' : 'Accept Agreement'}
             </button>
           </div>
@@ -223,9 +245,9 @@ function AgreementSign() {
             <h3>Enter OTP</h3>
             <p>Verification code sent to your phone.</p>
             {devOtp && <div className="otp-display">{devOtp}</div>}
-            {devOtp && <p style={{ fontSize: '0.7rem', color: 'var(--amber)', marginBottom: '0.4rem' }}>Dev Mode: OTP shown above &amp; logged to console</p>}
-            <div className="form-group" style={{ marginBottom: '0.4rem' }}>
-              <input type="text" className="form-input" placeholder="Enter 6-digit OTP" value={otp} onChange={e => setOtp(e.target.value)} maxLength={6} style={{ textAlign: 'center', fontSize: '1.1rem', letterSpacing: '4px' }} />
+            {devOtp && <p className="dev-note">Dev Mode: OTP shown above &amp; logged to console</p>}
+            <div className="form-group otp-input-group">
+              <input type="text" className="form-input otp-input" placeholder="••••••" value={otp} onChange={e => setOtp(e.target.value)} maxLength={6} />
             </div>
             {otpError && <div className="auth-error">{otpError}</div>}
             <div className="modal-actions">

@@ -1031,7 +1031,7 @@ textarea.form-input {
 
 /* ── SIGN PAGE ── */
 .sign-page {
-  max-width: 560px;
+  max-width: 640px;
   margin: 0 auto;
   padding: 1.5rem clamp(1rem, 3vw, 2.5rem);
   animation: fadeIn 0.35s ease;
@@ -1045,10 +1045,79 @@ textarea.form-input {
   box-shadow: var(--shadow-md);
 }
 
+/* ── SIGN STEPS ── */
+.sign-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.sign-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.step-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-strong);
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.step-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.sign-step.active .step-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  box-shadow: 0 0 0 4px var(--accent-light);
+}
+
+.sign-step.active .step-label {
+  color: var(--accent);
+}
+
+.sign-step.done .step-dot {
+  background: var(--green-light);
+  border-color: var(--green-border);
+  color: var(--green);
+}
+
+.sign-step.done .step-label {
+  color: var(--green);
+}
+
+.step-line {
+  width: 22px;
+  height: 1px;
+  background: var(--border-strong);
+  margin: 0 2px;
+}
+
+.step-line.done {
+  background: var(--green-border);
+}
+
+/* ── SIGN HEADER ── */
 .sign-header {
   text-align: center;
   margin-bottom: 1.25rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -1065,48 +1134,173 @@ textarea.form-input {
   font-size: 0.8rem;
 }
 
-.sign-details {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 2px;
-  margin-bottom: 1.25rem;
-}
-
-.sign-details .detail-row {
+/* ── PRICE BANNER ── */
+.sign-price-banner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 10px;
-  border-radius: 7px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  border-radius: var(--radius-lg);
+  padding: 0.9rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-sm);
 }
 
-.sign-details .detail-row:hover {
-  background: var(--bg-card);
+.sign-price-banner .price-label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
 }
 
-.sign-details .detail-row+.detail-row {
-  border-top: 1px solid var(--border);
+.sign-price-banner .price-value {
+  color: white;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.sign-details .detail-label {
+/* ── DETAILS SECTIONS ── */
+.sign-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.sign-section {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.9rem 1rem;
+}
+
+.sign-section h4 {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px dashed var(--border);
+}
+
+.sign-section .detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 7px 2px;
+}
+
+.sign-section .detail-row+.detail-row {
+  border-top: 1px dashed var(--border);
+}
+
+.sign-section .detail-label {
   font-size: 0.72rem;
   color: var(--text-muted);
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
-.sign-details .detail-value {
+.sign-section .detail-value {
   font-weight: 600;
   color: var(--text);
   font-size: 0.82rem;
   text-align: right;
-  max-width: 60%;
+  min-width: 0;
 }
 
+.sign-section .detail-value.pre-wrap {
+  white-space: pre-wrap;
+  text-align: right;
+}
+
+.terms-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.schedule-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.75rem;
+  text-align: center;
+}
+
+.schedule-label {
+  display: block;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.schedule-value {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ── SIGN FORM ── */
 .sign-form {
   margin-top: 1rem;
+}
+
+.pdf-view-row {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.sign-form-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+}
+
+.sign-form-title.center {
+  text-align: center;
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.confirm-box {
+  text-align: center;
+  background: var(--green-light);
+  border: 1px solid var(--green-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+
+.confirm-box .success-icon {
+  margin-bottom: 0.75rem;
+}
+
+.confirm-text {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
 }
 
 /* ── OTP MODAL ── */
@@ -1159,6 +1353,24 @@ textarea.form-input {
   font-weight: 700;
   color: var(--accent);
   letter-spacing: 6px;
+}
+
+.dev-note {
+  font-size: 0.7rem;
+  color: var(--amber);
+  margin-bottom: 0.4rem;
+}
+
+.otp-input-group {
+  margin-bottom: 0.4rem;
+}
+
+.otp-input {
+  text-align: center !important;
+  font-family: 'SF Mono', monospace;
+  font-size: 1.2rem !important;
+  letter-spacing: 8px;
+  font-weight: 700;
 }
 
 .modal-actions {
@@ -1358,14 +1570,39 @@ textarea.form-input {
   }
 
   .agreement-card {
+    padding: 0.9rem 1rem;
+  }
+
+  .card-footer {
     flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
+    align-items: stretch;
   }
 
   .agreement-actions {
     width: 100%;
     justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .sign-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .step-label {
+    display: none;
+  }
+
+  .sign-step.active .step-label,
+  .sign-step.done .step-label {
+    display: none;
+  }
+
+  .schedule-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .details-meta {
+    gap: 14px;
   }
 
   .navbar {
