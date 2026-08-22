@@ -551,7 +551,8 @@ textarea.form-input {
 
 .agreements-grid {
   display: grid;
-  gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
 }
 
 /* ── ADMIN DASHBOARD ── */
@@ -653,12 +654,6 @@ textarea.form-input {
 /* ── AGREEMENT DETAILS ── */
 .agreement-card.clickable {
   cursor: pointer;
-}
-
-.agreement-card.clickable:hover {
-  border-color: var(--accent-border);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
 }
 
 .btn-back {
@@ -786,34 +781,112 @@ textarea.form-input {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 0.85rem 1rem;
+  padding: 1rem 1.1rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: border-color 0.1s;
-  animation: fadeIn 0.25s ease;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  animation: fadeIn 0.25s ease both;
+}
+
+.agreement-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-hover));
+  opacity: 0;
+  transition: opacity 0.15s;
 }
 
 .agreement-card:hover {
-  border-color: var(--border-strong);
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
-.agreement-info h3 {
+.agreement-card:hover::before {
+  opacity: 1;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.card-top h3 {
   font-family: var(--font-display);
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 2px;
+  font-size: 0.95rem;
+  font-weight: 700;
   letter-spacing: -0.01em;
+  line-height: 1.35;
+  flex: 1;
 }
 
 .agreement-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px 10px;
+  gap: 6px;
+  align-items: center;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 100px;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.meta-chip.muted {
+  background: var(--bg-hover);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.ownership-tag {
+  margin-left: auto;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ownership-tag.creator {
+  color: var(--accent);
+}
+
+.ownership-tag.received {
+  color: var(--green);
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  margin-top: auto;
+}
+
+.card-footer-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.card-hint {
   font-size: 0.72rem;
   color: var(--text-muted);
-  margin-bottom: 3px;
-  align-items: center;
 }
 
 .agreement-link {
@@ -821,6 +894,9 @@ textarea.form-input {
   color: var(--accent);
   word-break: break-all;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .agreement-link:hover {

@@ -128,56 +128,58 @@ function Dashboard({ user }) {
             const isCreator = agreement.client === user.id || agreement.client?._id === user.id;
             return (
               <div className="agreement-card clickable" key={agreement._id} style={{ animationDelay: `${index * 0.05}s` }} onClick={() => navigate(`/agreement/${agreement._id}`)}>
-                <div className="agreement-info">
+                <div className="card-top">
                   <h3>{agreement.title}</h3>
-                  <div className="agreement-meta">
-                    <span>₹{agreement.price}</span>
-                    <span>{formatTimeline(agreement.timeline)}</span>
-                    <span>{new Date(agreement.createdAt).toLocaleDateString()}</span>
-                    <span className={`status-badge ${agreement.status}`}>{agreement.status}</span>
-                    {isCreator && agreement.paymentStatus === 'pending' && (
-                      <span className="status-badge pending">unpaid</span>
+                  <span className={`status-badge ${agreement.status}`}>{agreement.status}</span>
+                </div>
+                <div className="agreement-meta">
+                  <span className="meta-chip price">{`₹${agreement.price}`}</span>
+                  {agreement.timeline && <span className="meta-chip">{formatTimeline(agreement.timeline)}</span>}
+                  <span className="meta-chip muted">{new Date(agreement.createdAt).toLocaleDateString()}</span>
+                  {isCreator && agreement.paymentStatus === 'pending' && (
+                    <span className="status-badge pending">unpaid</span>
+                  )}
+                  {isCreator && agreement.paymentStatus === 'paid' && (
+                    <span className="status-badge accepted">paid</span>
+                  )}
+                  <span className={`ownership-tag ${isCreator ? 'creator' : 'received'}`}>
+                    {isCreator ? 'You created' : 'Sent to you'}
+                  </span>
+                </div>
+                <div className="card-footer">
+                  <div className="card-footer-info">
+                    {isCreator && agreement.agreementLinkToken && (
+                      <div className="agreement-link" onClick={(e) => { e.stopPropagation(); copyLink(agreement); }}>
+                        {copiedId === agreement._id ? 'Copied!' : `Sign link: ${window.location.origin}/agreement/sign/${agreement.agreementLinkToken.substring(0, 16)}...`}
+                      </div>
                     )}
-                    {isCreator && agreement.paymentStatus === 'paid' && (
-                      <span className="status-badge accepted">paid</span>
+                    {isCreator && !agreement.agreementLinkToken && (
+                      <div className="card-hint">Sign link will be available after payment</div>
                     )}
-                    {isCreator ? (
-                      <span style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '0.7rem' }}>You created</span>
-                    ) : (
-                      <span style={{ color: 'var(--green)', fontWeight: 600, fontSize: '0.7rem' }}>Sent to you</span>
+                    {!isCreator && (
+                      <div className="card-hint">Freelancer: {agreement.freelancerEmail}</div>
                     )}
                   </div>
-                  {isCreator && agreement.agreementLinkToken && (
-                    <div className="agreement-link" onClick={(e) => { e.stopPropagation(); copyLink(agreement); }}>
-                      {copiedId === agreement._id ? 'Copied!' : `Sign link: ${window.location.origin}/agreement/sign/${agreement.agreementLinkToken.substring(0, 16)}...`}
-                    </div>
-                  )}
-                  {isCreator && !agreement.agreementLinkToken && (
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Sign link will be available after payment</div>
-                  )}
-                  {!isCreator && (
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Freelancer: {agreement.freelancerEmail}</div>
-                  )}
-                </div>
-                <div className="agreement-actions" onClick={(e) => e.stopPropagation()}>
-                  {(agreement.status === 'accepted' || (isCreator && agreement.paymentStatus === 'paid')) && (
-                    <button className="btn btn-secondary btn-sm" onClick={() => downloadPdf(agreement._id)}>
-                      {agreement.status === 'accepted' ? 'Download PDF' : 'Preview PDF'}
-                    </button>
-                  )}
-                  {isCreator && agreement.status === 'pending' && agreement.paymentStatus === 'paid' && agreement.agreementLinkToken && (
-                    <button className="btn btn-secondary btn-sm" onClick={() => copyLink(agreement)}>
-                      {copiedId === agreement._id ? 'Copied!' : 'Copy Link'}
-                    </button>
-                  )}
-                  {isCreator && agreement.status === 'pending' && agreement.paymentStatus === 'pending' && (
-                    <button className="btn btn-primary btn-sm" onClick={() => setPayAgreement(agreement)}>
-                      Pay ₹{agreement.paymentAmount ?? 100}
-                    </button>
-                  )}
-                  {!isCreator && agreement.status === 'pending' && agreement.agreementLinkToken && (
-                    <Link to={`/agreement/sign/${agreement.agreementLinkToken}`} className="btn btn-primary btn-sm">Sign</Link>
-                  )}
+                  <div className="agreement-actions" onClick={(e) => e.stopPropagation()}>
+                    {(agreement.status === 'accepted' || (isCreator && agreement.paymentStatus === 'paid')) && (
+                      <button className="btn btn-secondary btn-sm" onClick={() => downloadPdf(agreement._id)}>
+                        {agreement.status === 'accepted' ? 'Download PDF' : 'Preview PDF'}
+                      </button>
+                    )}
+                    {isCreator && agreement.status === 'pending' && agreement.paymentStatus === 'paid' && agreement.agreementLinkToken && (
+                      <button className="btn btn-secondary btn-sm" onClick={() => copyLink(agreement)}>
+                        {copiedId === agreement._id ? 'Copied!' : 'Copy Link'}
+                      </button>
+                    )}
+                    {isCreator && agreement.status === 'pending' && agreement.paymentStatus === 'pending' && (
+                      <button className="btn btn-primary btn-sm" onClick={() => setPayAgreement(agreement)}>
+                        Pay ₹{agreement.paymentAmount ?? 100}
+                      </button>
+                    )}
+                    {!isCreator && agreement.status === 'pending' && agreement.agreementLinkToken && (
+                      <Link to={`/agreement/sign/${agreement.agreementLinkToken}`} className="btn btn-primary btn-sm">Sign</Link>
+                    )}
+                  </div>
                 </div>
               </div>
             );
