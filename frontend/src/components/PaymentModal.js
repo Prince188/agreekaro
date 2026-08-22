@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_URL } from '../config';
 
 function PaymentModal({ agreement, user, onSuccess, onClose }) {
   const [loading, setLoading] = useState(false);
@@ -9,7 +10,7 @@ function PaymentModal({ agreement, user, onSuccess, onClose }) {
     setError('');
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/payments/create-order', {
+      const res = await fetch(`${API_URL}/api/payments/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ agreementId: agreement._id })
@@ -34,7 +35,7 @@ function PaymentModal({ agreement, user, onSuccess, onClose }) {
         order_id: data.order.id,
         handler: async (response) => {
           try {
-            const verifyRes = await fetch('http://localhost:5000/api/payments/verify', {
+            const verifyRes = await fetch(`${API_URL}/api/payments/verify`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
               body: JSON.stringify({

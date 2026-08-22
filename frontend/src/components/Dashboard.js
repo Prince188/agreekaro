@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PaymentModal from './PaymentModal';
+import { API_URL } from '../config';
 
 function Dashboard({ user }) {
   const [agreements, setAgreements] = useState([]);
@@ -26,7 +27,7 @@ function Dashboard({ user }) {
   const fetchAgreements = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/api/agreements/my', {
+      const res = await fetch(`${API_URL}/api/agreements/my`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -50,7 +51,7 @@ function Dashboard({ user }) {
   const downloadPdf = async (agreementId) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5000/api/agreements/${agreementId}/pdf`, {
+      const res = await fetch(`${API_URL}/api/agreements/${agreementId}/pdf`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) {

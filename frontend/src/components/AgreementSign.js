@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { API_URL } from '../config';
 
 function AgreementSign() {
   const { token } = useParams();
@@ -28,7 +29,7 @@ function AgreementSign() {
 
   const fetchAgreement = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/agreements/public/${token}`);
+      const res = await fetch(`${API_URL}/api/agreements/public/${token}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Agreement not found');
       setAgreement(data);
@@ -40,7 +41,7 @@ function AgreementSign() {
     if (!form.freelancerPhone) { setOtpError('Please enter your phone number first'); return; }
     setOtpLoading(true); setOtpError('');
     try {
-      const res = await fetch('http://localhost:5000/api/agreements/send-otp', {
+      const res = await fetch(`${API_URL}/api/agreements/send-otp`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: form.freelancerPhone, agreementId: agreement._id })
       });
@@ -53,7 +54,7 @@ function AgreementSign() {
   const handleVerifyOTP = async () => {
     setOtpLoading(true); setOtpError('');
     try {
-      const res = await fetch('http://localhost:5000/api/agreements/verify-otp', {
+      const res = await fetch(`${API_URL}/api/agreements/verify-otp`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: form.freelancerPhone, otp, agreementId: agreement._id })
       });
@@ -66,7 +67,7 @@ function AgreementSign() {
   const handleAccept = async () => {
     setAcceptLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/agreements/accept/${token}`, {
+      const res = await fetch(`${API_URL}/api/agreements/accept/${token}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           freelancerName: form.freelancerName,
@@ -160,7 +161,7 @@ function AgreementSign() {
         {step === 'details' && (
           <div className="sign-form">
             <div style={{ textAlign: 'center', marginBottom: '0.75rem' }}>
-              <button className="btn btn-secondary btn-sm" onClick={() => window.open(`http://localhost:5000/api/agreements/public/${token}/pdf`, '_blank')}>
+              <button className="btn btn-secondary btn-sm" onClick={() => window.open(`${API_URL}/api/agreements/public/${token}/pdf`, '_blank')}>
                 View Agreement PDF
               </button>
             </div>
@@ -208,7 +209,7 @@ function AgreementSign() {
             <h2>Agreement Signed!</h2>
             <p>A copy of the PDF has been sent to your email.</p>
             {agreement.pdfPath && (
-              <button className="btn btn-primary" onClick={() => window.open(`http://localhost:5000/api/agreements/public/${token}/pdf`, '_blank')}>
+              <button className="btn btn-primary" onClick={() => window.open(`${API_URL}/api/agreements/public/${token}/pdf`, '_blank')}>
                 Download PDF
               </button>
             )}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PaymentModal from './PaymentModal';
+import { API_URL } from '../config';
 
 function CreateAgreement({ user }) {
   const [form, setForm] = useState({
@@ -29,7 +30,7 @@ function CreateAgreement({ user }) {
       ['advanceAmount', 'beforeDeliveryAmount', 'afterDeliveryAmount'].forEach((key) => {
         payload[key] = form[key] === '' ? undefined : Number(form[key]);
       });
-      const res = await fetch('http://localhost:5000/api/agreements', {
+      const res = await fetch(`${API_URL}/api/agreements`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
