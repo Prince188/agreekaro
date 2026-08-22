@@ -80,6 +80,23 @@ const sendPdf = async (agreement, res) => {
   res.download(pdfPath, `agreement_${agreement._id}.pdf`);
 };
 
+router.get('/:id', authMiddleware, async (req, res) => {
+  try {
+    const agreement = await Agreement.findById(req.params.id).populate('client', 'name email');
+    if (!agreement) {
+      return res.status(404).json({ message: 'Agreement not found' });
+    }
+    const isCreator = agreement.client._id.toString() === req.user._id.toString();
+    const isFreelancer = agreement.freelancerEmail === req.user.email;
+    if (!isCreator && !isFreelancer && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+    res.json(agreement);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get('/:id/pdf', authMiddleware, async (req, res) => {
   try {
     const agreement = await Agreement.findById(req.params.id);

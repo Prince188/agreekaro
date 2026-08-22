@@ -6,6 +6,7 @@ require('dotenv').config();
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const agreementRoutes = require('./routes/agreementRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const { router: paymentRoutes, webhookHandler } = require('./routes/paymentRoutes');
 
 const app = express();
@@ -22,6 +23,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/agreements', agreementRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
 
 app.get('/', (req, res) => {

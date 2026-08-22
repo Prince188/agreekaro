@@ -41,10 +41,11 @@ function Dashboard({ user }) {
     }
   };
 
-  const copyLink = (token, id) => {
-    const link = `${window.location.origin}/agreement/sign/${token}`;
+  const copyLink = (agreement) => {
+    if (!agreement.agreementLinkToken) return;
+    const link = `${window.location.origin}/agreement/sign/${agreement.agreementLinkToken}`;
     navigator.clipboard.writeText(link);
-    setCopiedId(id);
+    setCopiedId(agreement._id);
     setTimeout(() => setCopiedId(null), 2000);
   };
 
@@ -145,10 +146,13 @@ function Dashboard({ user }) {
                       <span style={{ color: 'var(--green)', fontWeight: 600, fontSize: '0.7rem' }}>Sent to you</span>
                     )}
                   </div>
-                  {isCreator && (
-                    <div className="agreement-link" onClick={() => copyLink(agreement.agreementLinkToken, agreement._id)}>
+                  {isCreator && agreement.agreementLinkToken && (
+                    <div className="agreement-link" onClick={() => copyLink(agreement)}>
                       {copiedId === agreement._id ? 'Copied!' : `Sign link: ${window.location.origin}/agreement/sign/${agreement.agreementLinkToken.substring(0, 16)}...`}
                     </div>
+                  )}
+                  {isCreator && !agreement.agreementLinkToken && (
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Sign link will be available after payment</div>
                   )}
                   {!isCreator && (
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Freelancer: {agreement.freelancerEmail}</div>
@@ -160,8 +164,8 @@ function Dashboard({ user }) {
                       {agreement.status === 'accepted' ? 'Download PDF' : 'Preview PDF'}
                     </button>
                   )}
-                  {isCreator && agreement.status === 'pending' && agreement.paymentStatus === 'paid' && (
-                    <button className="btn btn-secondary btn-sm" onClick={() => copyLink(agreement.agreementLinkToken, agreement._id)}>
+                  {isCreator && agreement.status === 'pending' && agreement.paymentStatus === 'paid' && agreement.agreementLinkToken && (
+                    <button className="btn btn-secondary btn-sm" onClick={() => copyLink(agreement)}>
                       {copiedId === agreement._id ? 'Copied!' : 'Copy Link'}
                     </button>
                   )}
@@ -170,7 +174,7 @@ function Dashboard({ user }) {
                       Pay ₹{agreement.paymentAmount ?? 100}
                     </button>
                   )}
-                  {!isCreator && agreement.status === 'pending' && (
+                  {!isCreator && agreement.status === 'pending' && agreement.agreementLinkToken && (
                     <Link to={`/agreement/sign/${agreement.agreementLinkToken}`} className="btn btn-primary btn-sm">Sign</Link>
                   )}
                 </div>

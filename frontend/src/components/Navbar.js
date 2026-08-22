@@ -19,6 +19,7 @@ function Navbar({ user, logout }) {
         {user ? (
           <>
             <Link to="/dashboard" className="nav-link active">Dashboard</Link>
+            {user.role === 'admin' && <Link to="/admin" className="nav-link">Admin</Link>}
             <Link to="/create-agreement" className="nav-link primary">New Agreement</Link>
             <div className="nav-user">
               <div className="nav-user-info">
