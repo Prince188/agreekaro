@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PaymentModal from './PaymentModal';
 import { API_URL } from '../config';
 
 function Dashboard({ user }) {
+  const navigate = useNavigate();
   const [agreements, setAgreements] = useState([]);
   const [createdCount, setCreatedCount] = useState(0);
   const [receivedCount, setReceivedCount] = useState(0);
@@ -126,7 +127,7 @@ function Dashboard({ user }) {
           {agreements.map((agreement, index) => {
             const isCreator = agreement.client === user.id || agreement.client?._id === user.id;
             return (
-              <div className="agreement-card" key={agreement._id} style={{ animationDelay: `${index * 0.05}s` }}>
+              <div className="agreement-card clickable" key={agreement._id} style={{ animationDelay: `${index * 0.05}s` }} onClick={() => navigate(`/agreement/${agreement._id}`)}>
                 <div className="agreement-info">
                   <h3>{agreement.title}</h3>
                   <div className="agreement-meta">
@@ -147,7 +148,7 @@ function Dashboard({ user }) {
                     )}
                   </div>
                   {isCreator && agreement.agreementLinkToken && (
-                    <div className="agreement-link" onClick={() => copyLink(agreement)}>
+                    <div className="agreement-link" onClick={(e) => { e.stopPropagation(); copyLink(agreement); }}>
                       {copiedId === agreement._id ? 'Copied!' : `Sign link: ${window.location.origin}/agreement/sign/${agreement.agreementLinkToken.substring(0, 16)}...`}
                     </div>
                   )}
@@ -158,7 +159,7 @@ function Dashboard({ user }) {
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Freelancer: {agreement.freelancerEmail}</div>
                   )}
                 </div>
-                <div className="agreement-actions">
+                <div className="agreement-actions" onClick={(e) => e.stopPropagation()}>
                   {(agreement.status === 'accepted' || (isCreator && agreement.paymentStatus === 'paid')) && (
                     <button className="btn btn-secondary btn-sm" onClick={() => downloadPdf(agreement._id)}>
                       {agreement.status === 'accepted' ? 'Download PDF' : 'Preview PDF'}

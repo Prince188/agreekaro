@@ -650,6 +650,138 @@ textarea.form-input {
   padding: 2rem !important;
 }
 
+/* ── AGREEMENT DETAILS ── */
+.agreement-card.clickable {
+  cursor: pointer;
+}
+
+.agreement-card.clickable:hover {
+  border-color: var(--accent-border);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.btn-back {
+  background: none;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 6px;
+  transition: color 0.1s;
+}
+
+.btn-back:hover {
+  color: var(--accent);
+}
+
+.dashboard-header .details-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.details-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 0.9rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.detail-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 12px;
+}
+
+.detail-card {
+  padding: 1.1rem 1.25rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.detail-card h2 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-card.wide {
+  grid-column: 1 / -1;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row.full {
+  flex-direction: column;
+  gap: 3px;
+  align-items: stretch;
+}
+
+.detail-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.detail-value {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-align: right;
+  word-break: break-word;
+}
+
+.detail-row.full .detail-value {
+  text-align: left;
+  white-space: pre-wrap;
+}
+
+.detail-value.mono {
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.detail-value.strong {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.detail-empty {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0;
+}
+
+.details-note {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
 .agreement-card {
   background: var(--bg-card);
   border: 1px solid var(--border);

@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import AdminDashboard from './components/AdminDashboard';
 import CreateAgreement from './components/CreateAgreement';
 import AgreementSign from './components/AgreementSign';
+import AgreementDetails from './components/AgreementDetails';
 import './App.css';
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
             <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login onLogin={login} />} />
             <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register onLogin={login} />} />
             <Route path="/dashboard" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
+            <Route path="/agreement/:id" element={user ? <AgreementDetails user={user} /> : <Navigate to="/login" />} />
             <Route path="/admin" element={user && user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/dashboard" />} />
             <Route path="/create-agreement" element={user ? <CreateAgreement user={user} /> : <Navigate to="/login" />} />
             <Route path="/agreement/sign/:token" element={<AgreementSign />} />
