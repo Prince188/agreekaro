@@ -166,6 +166,9 @@ function Dashboard({ user }) {
                         {agreement.status === 'accepted' ? 'Download PDF' : 'Preview PDF'}
                       </button>
                     )}
+                    {isCreator && agreement.status === 'pending' && (
+                      <Link to={`/agreement/edit/${agreement._id}`} className="btn btn-secondary btn-sm">Edit</Link>
+                    )}
                     {isCreator && agreement.status === 'pending' && agreement.paymentStatus === 'paid' && agreement.agreementLinkToken && (
                       <button className="btn btn-secondary btn-sm" onClick={() => copyLink(agreement)}>
                         {copiedId === agreement._id ? 'Copied!' : 'Copy Link'}

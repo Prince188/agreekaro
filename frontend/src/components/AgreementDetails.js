@@ -104,6 +104,9 @@ function AgreementDetails({ user }) {
         </div>
         <div className="details-actions">
           <button className="btn btn-secondary" onClick={downloadPdf}>Download PDF</button>
+          {isCreator && agreement.status === 'pending' && (
+            <Link to={`/agreement/edit/${agreement._id}`} className="btn btn-secondary">Edit</Link>
+          )}
           {isCreator && agreement.agreementLinkToken && (
             <button className="btn btn-primary" onClick={copyLink}>{copied ? 'Copied!' : 'Copy Sign Link'}</button>
           )}

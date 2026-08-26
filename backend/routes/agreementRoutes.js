@@ -97,6 +97,49 @@ router.get('/:id', authMiddleware, async (req, res) => {
   }
 });
 
+router.put('/:id', authMiddleware, async (req, res) => {
+  try {
+    const agreement = await Agreement.findById(req.params.id);
+    if (!agreement) {
+      return res.status(404).json({ message: 'Agreement not found' });
+    }
+    if (agreement.client.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Only the creator can edit this agreement' });
+    }
+    if (agreement.status === 'accepted') {
+      return res.status(400).json({ message: 'Cannot edit an accepted agreement' });
+    }
+
+    const allowedFields = [
+      'clientName', 'clientEmail', 'clientMobile', 'clientAddress',
+      'title', 'description', 'deliverables', 'timeline', 'revisions', 'additionalTerms',
+      'price', 'advanceAmount', 'beforeDeliveryAmount', 'afterDeliveryAmount',
+      'freelancerName', 'freelancerEmail', 'freelancerPhone', 'freelancerAddress'
+    ];
+
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        agreement[field] = req.body[field];
+      }
+    });
+
+    if (req.body.price !== undefined && !req.body.price) {
+      return res.status(400).json({ message: 'Price is required' });
+    }
+    if (req.body.freelancerEmail !== undefined && !req.body.freelancerEmail) {
+      return res.status(400).json({ message: 'Freelancer email is required' });
+    }
+    if (req.body.freelancerPhone !== undefined && !req.body.freelancerPhone) {
+      return res.status(400).json({ message: 'Freelancer phone is required' });
+    }
+
+    await agreement.save();
+    res.json(agreement);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get('/:id/pdf', authMiddleware, async (req, res) => {
   try {
     const agreement = await Agreement.findById(req.params.id);

@@ -1,20 +1,66 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import PaymentModal from './PaymentModal';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
 
-function CreateAgreement({ user }) {
+function EditAgreement({ user }) {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
-    clientName: '', clientEmail: '', clientMobile: '',
+    clientName: '', clientEmail: '', clientMobile: '', clientAddress: '',
     title: '', description: '', deliverables: '', timeline: '', revisions: '', additionalTerms: '',
     price: '', advanceAmount: '', beforeDeliveryAmount: '', afterDeliveryAmount: '',
-    freelancerName: '', freelancerEmail: '', freelancerPhone: ''
+    freelancerName: '', freelancerEmail: '', freelancerPhone: '', freelancerAddress: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [created, setCreated] = useState(null);
-  const [showPayment, setShowPayment] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [fetching, setFetching] = useState(true);
+
+  useEffect(() => {
+    fetchAgreement();
+  }, []);
+
+  const fetchAgreement = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/agreements/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to load agreement');
+      if (data.status === 'accepted') {
+        throw new Error('Cannot edit an accepted agreement');
+      }
+      const clientUser = data.client;
+      const isCreator = clientUser && (clientUser._id === user.id || clientUser === user.id);
+      if (!isCreator) {
+        throw new Error('Only the creator can edit this agreement');
+      }
+      setForm({
+        clientName: data.clientName || '',
+        clientEmail: data.clientEmail || '',
+        clientMobile: data.clientMobile || '',
+        clientAddress: data.clientAddress || '',
+        title: data.title || '',
+        description: data.description || '',
+        deliverables: data.deliverables || '',
+        timeline: data.timeline || '',
+        revisions: data.revisions || '',
+        additionalTerms: data.additionalTerms || '',
+        price: data.price || '',
+        advanceAmount: data.advanceAmount ?? '',
+        beforeDeliveryAmount: data.beforeDeliveryAmount ?? '',
+        afterDeliveryAmount: data.afterDeliveryAmount ?? '',
+        freelancerName: data.freelancerName || '',
+        freelancerEmail: data.freelancerEmail || '',
+        freelancerPhone: data.freelancerPhone || '',
+        freelancerAddress: data.freelancerAddress || ''
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setFetching(false);
+    }
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,8 +76,8 @@ function CreateAgreement({ user }) {
       ['advanceAmount', 'beforeDeliveryAmount', 'afterDeliveryAmount'].forEach((key) => {
         payload[key] = form[key] === '' ? undefined : Number(form[key]);
       });
-      const res = await fetch(`${API_URL}/api/agreements`, {
-        method: 'POST',
+      const res = await fetch(`${API_URL}/api/agreements/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -39,8 +85,8 @@ function CreateAgreement({ user }) {
         body: JSON.stringify(payload)
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Failed to create agreement');
-      setCreated(data);
+      if (!res.ok) throw new Error(data.message || 'Failed to update agreement');
+      navigate(`/agreement/${id}`);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -48,66 +94,26 @@ function CreateAgreement({ user }) {
     }
   };
 
-  const copyLink = () => {
-    const link = `${window.location.origin}/agreement/sign/${created.agreementLinkToken}`;
-    navigator.clipboard.writeText(link);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  if (created && created.paymentStatus === 'paid') {
-    const signLink = `${window.location.origin}/agreement/sign/${created.agreementLinkToken}`;
-    return (
-      <div className="create-page">
-        <div className="form-success">
-          <div className="success-icon">&#x2714;</div>
-          <h3>Payment Successful!</h3>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.4rem', fontSize: '0.82rem' }}>Your agreement link is ready. Share it with the freelancer:</p>
-          <div className="link-display" onClick={copyLink}>{signLink}</div>
-          <p className="copy-feedback">{copied ? 'Copied to clipboard!' : 'Click to copy'}</p>
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '6px', justifyContent: 'center' }}>
-            <Link to="/dashboard" className="btn btn-secondary">Back to Dashboard</Link>
-          </div>
-        </div>
-      </div>
-    );
+  if (fetching) {
+    return <div className="dashboard"><div className="loading-spinner" style={{ margin: '4rem auto' }}></div></div>;
   }
 
-  if (created) {
+  if (error && !form.title) {
     return (
-      <div className="create-page">
-        <div className="form-success payment-pending-card">
-          <div className="payment-pending-icon">&#x1F4B3;</div>
-          <h3>Complete Payment to Generate Link</h3>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '0.25rem', fontSize: '0.82rem' }}>
-            Your agreement "{created.title}" has been created.
-          </p>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginBottom: '1rem' }}>
-            Pay the one-time fee of ₹{created.paymentAmount ?? 100} to generate the signing link.
-          </p>
-          <button className="btn btn-primary btn-lg" style={{ width: '100%' }} onClick={() => setShowPayment(true)}>
-            Pay ₹{created.paymentAmount ?? 100}
-          </button>
-          <div style={{ marginTop: '0.75rem', display: 'flex', gap: '6px', justifyContent: 'center' }}>
-            <Link to="/dashboard" className="btn btn-secondary">Back to Dashboard</Link>
-          </div>
+      <div className="dashboard">
+        <div className="empty-state glass-card">
+          <h3>Cannot Edit Agreement</h3>
+          <p>{error}</p>
+          <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>Back to Dashboard</button>
         </div>
-        {showPayment && (
-          <PaymentModal
-            agreement={created}
-            user={user}
-            onSuccess={(paidAgreement) => { setCreated(paidAgreement); setShowPayment(false); }}
-            onClose={() => setShowPayment(false)}
-          />
-        )}
       </div>
     );
   }
 
   return (
     <div className="create-page">
-      <h1>Create Agreement</h1>
-      <p className="subtitle">Fill in the details below to generate a new agreement.</p>
+      <h1>Edit Agreement</h1>
+      <p className="subtitle">Update the details below. Changes will be reflected in the signing link.</p>
       {error && <div className="auth-error">{error}</div>}
       <div className="create-form">
         <form onSubmit={handleSubmit}>
@@ -205,12 +211,8 @@ function CreateAgreement({ user }) {
             </div>
           </div>
 
-          <div className="create-fee-note">
-            <span className="fee-note-icon">&#x1F4B3;</span>
-            <span>One-time fee of ₹100 applies after creation to generate your signing link.</span>
-          </div>
           <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%', marginTop: '0.5rem' }} disabled={loading}>
-            {loading ? 'Creating...' : 'Create Agreement'}
+            {loading ? 'Saving...' : 'Save Changes'}
           </button>
         </form>
       </div>
@@ -218,4 +220,4 @@ function CreateAgreement({ user }) {
   );
 }
 
-export default CreateAgreement;
+export default EditAgreement;
