@@ -133,7 +133,7 @@ function Dashboard({ user }) {
             <input
               type="text"
               className="search-input"
-              placeholder="Search by ID or name..."
+              placeholder="Search by agreement ID or title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
