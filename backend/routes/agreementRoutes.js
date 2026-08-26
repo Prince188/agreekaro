@@ -15,20 +15,20 @@ const generateAgreementID = () => {
 router.post('/', authMiddleware, async (req, res) => {
   try {
     const {
-      clientName, clientEmail, clientMobile, clientAddress,
+      clientName, clientEmail, clientMobile,
       title, description, deliverables, timeline, revisions, additionalTerms,
       price, advanceAmount, beforeDeliveryAmount, afterDeliveryAmount,
-      freelancerName, freelancerEmail, freelancerPhone, freelancerAddress
+      freelancerName, freelancerEmail, freelancerPhone
     } = req.body;
     if (!clientName || !title || !deliverables || !price || !freelancerEmail || !freelancerPhone) {
       return res.status(400).json({ message: 'Please fill all fields' });
     }
     const agreement = await Agreement.create({
       agreementID: generateAgreementID(),
-      clientName, clientEmail, clientMobile, clientAddress,
+      clientName, clientEmail, clientMobile,
       title, description, deliverables, timeline, revisions, additionalTerms,
       price, advanceAmount, beforeDeliveryAmount, afterDeliveryAmount,
-      freelancerName, freelancerEmail, freelancerPhone, freelancerAddress,
+      freelancerName, freelancerEmail, freelancerPhone,
       client: req.user._id
     });
     res.status(201).json(agreement);
@@ -111,10 +111,10 @@ router.put('/:id', authMiddleware, async (req, res) => {
     }
 
     const allowedFields = [
-      'clientName', 'clientEmail', 'clientMobile', 'clientAddress',
+      'clientName', 'clientEmail', 'clientMobile',
       'title', 'description', 'deliverables', 'timeline', 'revisions', 'additionalTerms',
       'price', 'advanceAmount', 'beforeDeliveryAmount', 'afterDeliveryAmount',
-      'freelancerName', 'freelancerEmail', 'freelancerPhone', 'freelancerAddress'
+      'freelancerName', 'freelancerEmail', 'freelancerPhone'
     ];
 
     allowedFields.forEach((field) => {

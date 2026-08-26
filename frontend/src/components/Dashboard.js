@@ -11,6 +11,7 @@ function Dashboard({ user }) {
   const [loading, setLoading] = useState(true);
   const [copiedId, setCopiedId] = useState(null);
   const [payAgreement, setPayAgreement] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const formatTimeline = (value) => {
     if (!value) return '';
@@ -78,6 +79,15 @@ function Dashboard({ user }) {
   const accepted = agreements.filter(a => a.status === 'accepted').length;
   const unpaid = agreements.filter(a => a.client === user.id || a.client?._id === user.id).filter(a => a.paymentStatus === 'pending').length;
 
+  const filteredAgreements = agreements.filter((agreement) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      (agreement.agreementID && agreement.agreementID.toLowerCase().includes(query)) ||
+      (agreement.title && agreement.title.toLowerCase().includes(query))
+    );
+  });
+
   if (loading) {
     return <div className="dashboard"><div className="loading-spinner" style={{ margin: '4rem auto' }}></div></div>;
   }
@@ -116,6 +126,24 @@ function Dashboard({ user }) {
         </div>
       </div>
 
+      {agreements.length > 0 && (
+        <div className="dashboard-search">
+          <div className="search-input-wrapper">
+            <span className="search-icon">&#128269;</span>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by ID or name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button className="search-clear" onClick={() => setSearchQuery('')}>&#10005;</button>
+            )}
+          </div>
+        </div>
+      )}
+
       {agreements.length === 0 ? (
         <div className="empty-state glass-card">
           <h3>No Agreements Yet</h3>
@@ -124,7 +152,13 @@ function Dashboard({ user }) {
         </div>
       ) : (
         <div className="agreements-grid">
-          {agreements.map((agreement, index) => {
+          {filteredAgreements.length === 0 ? (
+            <div className="empty-state glass-card" style={{ gridColumn: '1 / -1' }}>
+              <h3>No Results Found</h3>
+              <p>No agreements match "{searchQuery}". Try a different search term.</p>
+            </div>
+          ) : (
+            filteredAgreements.map((agreement, index) => {
             const isCreator = agreement.client === user.id || agreement.client?._id === user.id;
             return (
               <div className="agreement-card clickable" key={agreement._id} style={{ animationDelay: `${index * 0.05}s` }} onClick={() => navigate(`/agreement/${agreement._id}`)}>
@@ -132,10 +166,16 @@ function Dashboard({ user }) {
                   <h3>{agreement.title}</h3>
                   <span className={`status-badge ${agreement.status}`}>{agreement.status}</span>
                 </div>
+                <div className="card-id">
+                  <span className="card-id-label">ID</span>
+                  <span className="card-id-value">{agreement.agreementID || '-'}</span>
+                </div>
                 <div className="agreement-meta">
                   <span className="meta-chip price">{`₹${agreement.price}`}</span>
                   {agreement.timeline && <span className="meta-chip">{formatTimeline(agreement.timeline)}</span>}
                   <span className="meta-chip muted">{new Date(agreement.createdAt).toLocaleDateString()}</span>
+                </div>
+                <div className="card-info">
                   {isCreator && agreement.paymentStatus === 'pending' && (
                     <span className="status-badge pending">unpaid</span>
                   )}
@@ -186,7 +226,8 @@ function Dashboard({ user }) {
                 </div>
               </div>
             );
-          })}
+          })
+          )}
         </div>
       )}
 

@@ -127,10 +127,6 @@ function CreateAgreement({ user }) {
               <label className="form-label">Client Mobile</label>
               <input type="tel" name="clientMobile" className="form-input" placeholder="+1234567890" value={form.clientMobile} onChange={handleChange} />
             </div>
-            <div className="form-group">
-              <label className="form-label">Client Address</label>
-              <input type="text" name="clientAddress" className="form-input" placeholder="Full address" value={form.clientAddress} onChange={handleChange} />
-            </div>
           </div>
 
           <div className="form-section-title">Project Details</div>
@@ -198,10 +194,6 @@ function CreateAgreement({ user }) {
             <div className="form-group">
               <label className="form-label">Freelancer Phone</label>
               <input type="tel" name="freelancerPhone" className="form-input" placeholder="+1234567890" value={form.freelancerPhone} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Freelancer Address</label>
-              <input type="text" name="freelancerAddress" className="form-input" placeholder="Full address" value={form.freelancerAddress} onChange={handleChange} />
             </div>
           </div>
 

@@ -6,10 +6,10 @@ function EditAgreement({ user }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    clientName: '', clientEmail: '', clientMobile: '', clientAddress: '',
+    clientName: '', clientEmail: '', clientMobile: '',
     title: '', description: '', deliverables: '', timeline: '', revisions: '', additionalTerms: '',
     price: '', advanceAmount: '', beforeDeliveryAmount: '', afterDeliveryAmount: '',
-    freelancerName: '', freelancerEmail: '', freelancerPhone: '', freelancerAddress: ''
+    freelancerName: '', freelancerEmail: '', freelancerPhone: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,7 +39,6 @@ function EditAgreement({ user }) {
         clientName: data.clientName || '',
         clientEmail: data.clientEmail || '',
         clientMobile: data.clientMobile || '',
-        clientAddress: data.clientAddress || '',
         title: data.title || '',
         description: data.description || '',
         deliverables: data.deliverables || '',
@@ -52,8 +51,7 @@ function EditAgreement({ user }) {
         afterDeliveryAmount: data.afterDeliveryAmount ?? '',
         freelancerName: data.freelancerName || '',
         freelancerEmail: data.freelancerEmail || '',
-        freelancerPhone: data.freelancerPhone || '',
-        freelancerAddress: data.freelancerAddress || ''
+        freelancerPhone: data.freelancerPhone || ''
       });
     } catch (err) {
       setError(err.message);
@@ -133,10 +131,6 @@ function EditAgreement({ user }) {
               <label className="form-label">Client Mobile</label>
               <input type="tel" name="clientMobile" className="form-input" placeholder="+1234567890" value={form.clientMobile} onChange={handleChange} />
             </div>
-            <div className="form-group">
-              <label className="form-label">Client Address</label>
-              <input type="text" name="clientAddress" className="form-input" placeholder="Full address" value={form.clientAddress} onChange={handleChange} />
-            </div>
           </div>
 
           <div className="form-section-title">Project Details</div>
@@ -204,10 +198,6 @@ function EditAgreement({ user }) {
             <div className="form-group">
               <label className="form-label">Freelancer Phone</label>
               <input type="tel" name="freelancerPhone" className="form-input" placeholder="+1234567890" value={form.freelancerPhone} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Freelancer Address</label>
-              <input type="text" name="freelancerAddress" className="form-input" placeholder="Full address" value={form.freelancerAddress} onChange={handleChange} />
             </div>
           </div>
 

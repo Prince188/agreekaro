@@ -249,18 +249,22 @@ function AgreementDetails({ user }) {
                 <span className="detail-label">Accepted Phone</span>
                 <span className="detail-value">{acceptance.freelancerPhone || '-'}</span>
               </div>
-              <div className="detail-row">
-                <span className="detail-label">IP Address</span>
-                <span className="detail-value mono">{acceptance.ipAddress || '-'}</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Device Browser</span>
-                <span className="detail-value">{acceptance.deviceBrowser || '-'}</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Device OS</span>
-                <span className="detail-value">{acceptance.deviceOS || '-'}</span>
-              </div>
+              {user.role === 'admin' && (
+                <>
+                  <div className="detail-row">
+                    <span className="detail-label">IP Address</span>
+                    <span className="detail-value mono">{acceptance.ipAddress || '-'}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="detail-label">Device Browser</span>
+                    <span className="detail-value">{acceptance.deviceBrowser || '-'}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="detail-label">Device OS</span>
+                    <span className="detail-value">{acceptance.deviceOS || '-'}</span>
+                  </div>
+                </>
+              )}
               <div className="detail-row">
                 <span className="detail-label">Accepted At</span>
                 <span className="detail-value">{formatDate(acceptance.acceptedAt)}</span>
