@@ -51,6 +51,24 @@ function Dashboard({ user }) {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const previewPdf = async (agreementId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/agreements/${agreementId}/pdf`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || 'Failed to load PDF');
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch (err) {
+      console.error('PDF preview failed:', err.message);
+    }
+  };
+
   const downloadPdf = async (agreementId) => {
     try {
       const token = localStorage.getItem('token');
@@ -201,10 +219,17 @@ function Dashboard({ user }) {
                     )}
                   </div>
                   <div className="agreement-actions" onClick={(e) => e.stopPropagation()}>
-                    {(agreement.status === 'accepted' || (isCreator && agreement.paymentStatus === 'paid')) && (
-                      <button className="btn btn-secondary btn-sm" onClick={() => downloadPdf(agreement._id)}>
-                        {agreement.status === 'accepted' ? 'Download PDF' : 'Preview PDF'}
-                      </button>
+                    {agreement.status === 'accepted' && (
+                      <>
+                        <button className="btn btn-secondary btn-sm" onClick={() => previewPdf(agreement._id)}>Preview PDF</button>
+                        <button className="btn btn-secondary btn-sm" onClick={() => downloadPdf(agreement._id)}>Download PDF</button>
+                      </>
+                    )}
+                    {isCreator && agreement.paymentStatus === 'paid' && agreement.status === 'pending' && (
+                      <>
+                        <button className="btn btn-secondary btn-sm" onClick={() => previewPdf(agreement._id)}>Preview PDF</button>
+                        <button className="btn btn-secondary btn-sm" onClick={() => downloadPdf(agreement._id)}>Download PDF</button>
+                      </>
                     )}
                     {isCreator && agreement.status === 'pending' && (
                       <Link to={`/agreement/edit/${agreement._id}`} className="btn btn-secondary btn-sm">Edit</Link>

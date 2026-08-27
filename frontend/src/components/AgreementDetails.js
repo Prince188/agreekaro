@@ -52,6 +52,24 @@ function AgreementDetails({ user }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const previewPdf = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/agreements/${id}/pdf`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || 'Failed to load PDF');
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   const downloadPdf = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -103,6 +121,7 @@ function AgreementDetails({ user }) {
           <h1>{agreement.title}</h1>
         </div>
         <div className="details-actions">
+          <button className="btn btn-secondary" onClick={previewPdf}>Preview PDF</button>
           <button className="btn btn-secondary" onClick={downloadPdf}>Download PDF</button>
           {isCreator && agreement.status === 'pending' && (
             <Link to={`/agreement/edit/${agreement._id}`} className="btn btn-secondary">Edit</Link>

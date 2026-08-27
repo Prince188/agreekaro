@@ -72,6 +72,42 @@
   color: white;
 }
 
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 110;
+}
+
+.navbar-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.navbar-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.navbar-overlay {
+  display: none;
+}
+
 .navbar-links {
   display: flex;
   align-items: center;
@@ -980,9 +1016,8 @@
 
 .card-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: 8px;
   padding-top: 10px;
   border-top: 1px dashed var(--border);
   margin-top: auto;
@@ -990,7 +1025,7 @@
 
 .card-footer-info {
   min-width: 0;
-  flex: 1;
+  width: 100%;
 }
 
 .card-hint {
@@ -1025,7 +1060,7 @@
   display: flex;
   gap: 5px;
   align-items: center;
-  flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .status-badge {
@@ -1820,6 +1855,74 @@ textarea.form-input {
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
+  .navbar-toggle {
+    display: flex;
+  }
+
+  .navbar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 104;
+  }
+
+  .navbar-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 260px;
+    height: 100vh;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 70px 1.25rem 1.5rem;
+    gap: 6px;
+    transition: right 0.3s ease;
+    box-shadow: var(--shadow-lg);
+    z-index: 105;
+    overflow-y: auto;
+  }
+
+  .navbar-links.open {
+    right: 0;
+  }
+
+  .nav-link {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .nav-link.primary {
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+
+  .nav-user {
+    display: flex;
+    margin-left: 0;
+    padding-left: 0;
+    padding: 10px 12px;
+    background: var(--bg);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    border-left: none;
+    border-right: none;
+  }
+
+  .nav-user-info {
+    text-align: left;
+  }
+
+  .nav-link.danger {
+    margin-top: 0.5rem;
+    text-align: center;
+    background: var(--red-light);
+    border-radius: var(--radius-lg);
+  }
+
   .landing-hero {
     padding: 2.5rem 0 1.5rem;
   }
@@ -1833,22 +1936,28 @@ textarea.form-input {
   }
 
   .dashboard-header {
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     gap: 0.75rem;
-    text-align: center;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.1rem;
+    flex: 1;
   }
 
   .dashboard-header .btn {
-    width: 100%;
+    white-space: nowrap;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+  }
+
+  .agreements-grid {
+    grid-template-columns: 1fr;
   }
 
   .agreement-card {
     padding: 0.9rem 1rem;
-  }
-
-  .card-footer {
-    flex-direction: column;
-    align-items: stretch;
   }
 
   .agreement-actions {
@@ -1876,14 +1985,43 @@ textarea.form-input {
 
   .details-meta {
     gap: 14px;
+    flex-direction: column;
   }
 
-  .navbar {
-    padding: 0 0.75rem;
+  .details-grid {
+    grid-template-columns: 1fr;
   }
 
-  .nav-user {
-    display: none;
+  .dashboard-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .admin-tabs {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .admin-tab {
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .create-page {
+    padding: 1rem;
+  }
+
+  .create-form {
+    padding: 1.25rem;
+  }
+
+  .modal {
+    width: 95%;
+    padding: 1.25rem;
+  }
+
+  .admin-agreement-modal {
+    max-height: 80vh;
   }
 }
 
@@ -1898,5 +2036,75 @@ textarea.form-input {
 
   .landing-actions .btn {
     width: 100%;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .stat-card {
+    padding: 0.65rem 0.75rem;
+  }
+
+  .stat-card .stat-value {
+    font-size: 1.15rem;
+  }
+
+  .stat-card .stat-label {
+    font-size: 0.6rem;
+  }
+
+  .card-id {
+    padding: 3px 8px;
+  }
+
+  .card-id-value {
+    font-size: 0.65rem;
+  }
+
+  .meta-chip {
+    padding: 2px 7px;
+    font-size: 0.62rem;
+  }
+
+  .details-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .details-actions .btn {
+    width: 100%;
+  }
+
+  .dashboard-search {
+    margin-bottom: 0.75rem;
+  }
+
+  .sign-page {
+    padding: 1rem;
+  }
+
+  .sign-steps {
+    gap: 4px;
+  }
+
+  .sign-price-banner {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.25rem;
+  }
+
+  .auth-page {
+    padding: 1rem;
+  }
+
+  .auth-card {
+    padding: 1.5rem;
+  }
+
+  .empty-state {
+    padding: 2rem 1rem;
   }
 }
