@@ -1629,6 +1629,63 @@ textarea.form-input {
   margin-bottom: 1rem;
 }
 
+/* ── TERMS & CONDITIONS ── */
+.tc-content {
+  margin-top: 1.5rem;
+}
+
+.tc-intro {
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+.tc-section {
+  margin-bottom: 1.5rem;
+}
+
+.tc-section h3 {
+  color: var(--accent);
+  font-family: 'Comfortaa', cursive;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.tc-section p {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+}
+
+.tc-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.tc-list li {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  margin-bottom: 0.25rem;
+}
+
+.tc-footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.tc-footer p {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
 /* ── OTP MODAL ── */
 .modal-overlay {
   position: fixed;

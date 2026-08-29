@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { API_URL } from '../config';
 
 function AgreementSign() {
@@ -15,6 +15,7 @@ function AgreementSign() {
   const [otpError, setOtpError] = useState('');
   const [devOtp, setDevOtp] = useState('');
   const [acceptLoading, setAcceptLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const formatTimeline = (value) => {
     if (!value) return '';
@@ -218,8 +219,17 @@ function AgreementSign() {
             <p className="confirm-text">
               By clicking "Accept Agreement", you confirm your identity and agree to all the terms above.
             </p>
+            <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '1rem 0', fontSize: '0.85rem', color: 'var(--text-primary)', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={e => setTermsAccepted(e.target.checked)}
+                style={{ width: '16px', height: '16px', accentColor: 'var(--accent)' }}
+              />
+              <span>I have read and agree to the <Link to="/terms-and-conditions" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Terms &amp; Conditions</Link></span>
+            </label>
             {otpError && <div className="auth-error">{otpError}</div>}
-            <button className="btn btn-success btn-block" onClick={handleAccept} disabled={acceptLoading}>
+            <button className="btn btn-success btn-block" onClick={handleAccept} disabled={acceptLoading || !termsAccepted}>
               {acceptLoading ? 'Processing...' : 'Accept Agreement'}
             </button>
           </div>

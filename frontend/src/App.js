@@ -10,6 +10,7 @@ import CreateAgreement from './components/CreateAgreement';
 import AgreementSign from './components/AgreementSign';
 import AgreementDetails from './components/AgreementDetails';
 import EditAgreement from './components/EditAgreement';
+import TermsConditions from './components/TermsConditions';
 import './App.css';
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
             <Route path="/admin" element={user && user.role === 'admin' ? <AdminDashboard user={user} /> : <Navigate to="/dashboard" />} />
             <Route path="/create-agreement" element={user ? <CreateAgreement user={user} /> : <Navigate to="/login" />} />
             <Route path="/agreement/sign/:token" element={<AgreementSign />} />
+            <Route path="/terms-and-conditions" element={<TermsConditions />} />
           </Routes>
         </main>
       </div>

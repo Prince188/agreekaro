@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PaymentModal from './PaymentModal';
 import { API_URL } from '../config';
 
 function CreateAgreement({ user }) {
   const [form, setForm] = useState({
-    clientName: '', clientEmail: '', clientMobile: '',
+    clientName: user?.name || '', clientEmail: user?.email || '', clientMobile: '',
     title: '', description: '', deliverables: '', timeline: '', revisions: '', additionalTerms: '',
     price: '', advanceAmount: '', beforeDeliveryAmount: '', afterDeliveryAmount: '',
     freelancerName: '', freelancerEmail: '', freelancerPhone: ''
